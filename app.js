@@ -7,21 +7,29 @@ function createVDOM(type, props, ...children) {
 }
 
 function createElement(node) {
-  // Take properties object,
-  // loop through properties object
-  // check if "properties object".key is = result.key
-  // pass "properties object".key into result.key
+  let element;
+  function setAttributes(el, attrs) {
+    for (var key in attrs) {
+      el.setAttribute(key, attrs[key]);
+    }
+  }
 
-  const result = {
-    tagName: node.type,
-    class: "",
-    id: "",
-    href: "",
-    textNode: "",
-    childNodes: [],
-  };
+  // write if statement for textNode
+  if (typeof node === "string") {
+    return document.createTextNode(node);
+  } else {
+    // write function to create HTMLelement
+    element = document.createElement(node.type);
+    // add attributes to new element
+    setAttributes(element, node.props);
+  }
 
-  return result;
+  // write recursive function to recurse through childnodes
+  for (let i = 0; i < node.children.length; i++) {
+    let child = createElement(node.children[i]);
+    element.appendChild(child);
+  }
+  return element;
 }
 
 function changed(node1, node2) {

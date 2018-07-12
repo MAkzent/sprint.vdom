@@ -95,7 +95,6 @@ describe("vDOM implementation", () => {
     });
 
     it("should return an HTML Element", () => {
-      console.log(seedElements.children[0]);
       expect(result.tagName).to.equal("A");
     });
 
@@ -106,6 +105,10 @@ describe("vDOM implementation", () => {
       |* This may be important for testing...
       |* ...ok, it obviously is, so take this clue into account.
       */
+      console.log(result.innerHTML);
+      expect(result).to.eql(
+        '<div id="firstParagraph" class="container"></div>'
+      );
     });
 
     it("should convert grand childNodes to HTML", () => {
