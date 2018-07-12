@@ -8,7 +8,7 @@ describe("vDOM implementation", () => {
   beforeEach(() => {
     // here are some test elements (aka seed) to help you get started
     aProps = { href: "https://codechrysalis.io" };
-    divElement = createVDOM("div", null, "text node", createVDOM("img"));
+    divElement = createVDOM("div", null, createVDOM("img"), "text node");
     spanElement = createVDOM("span");
     textElement = "Click Me";
     seedElements = createVDOM(
@@ -28,36 +28,66 @@ describe("vDOM implementation", () => {
     });
 
     it("should return an object with type, props, and children properties", () => {
-      const objectStructure = ["type", "props", "children"];
-      let returnedObjectStructure = [];
-      let returnedObject = createVDOM();
-      for (let key in returnedObject) {
-        returnedObjectStructure.push(key);
-      }
-      expect(returnedObjectStructure).to.eql(objectStructure);
+      expect(seedElements).to.have.property("type");
+      expect(seedElements).to.have.property("props");
+      expect(seedElements).to.have.property("children");
     });
 
-    it("should return a string for type", () => {});
+    it("should return a string for type", () => {
+      expect(seedElements["type"]).to.be.a("string");
+    });
 
-    it("should return an array of children objects", () => {});
+    it("should return a object of props", () => {
+      expect(seedElements["props"]).to.be.a("object");
+    });
 
-    it("should return a object of props", () => {});
+    it("should return an array of children objects", () => {
+      expect(seedElements["children"]).to.be.a("array");
+    });
 
-    it("should return an array of grandchildren objects", () => {});
+    it("should return an array of grandchildren objects", () => {
+      expect(seedElements["children"][0]).to.be.a("object");
+    });
 
     it("should return an array of great-grandchildren objects", () => {
-      // maybe you need to edit the seed elements above a little for this one
+      // maybe you need to edit the seed elements above a little for this one -- done that
+      expect(seedElements["children"][0]["children"][0]).to.be.a("object");
     });
 
-    it("should have a string value to represent a text node when given a string (aka text element)", () => {});
+    it("should have a string value to represent a text node when child was given a string (aka text element)", () => {
+      expect(seedElements["children"][0]["children"][1]).to.be.a("string");
+    });
   });
 
   describe("createElement function", () => {
     let result;
+    let aProps, divElement, spanElement, textElement, seedElements;
 
     beforeEach(() => {
       // create your own seed elements or use the ones created above!
-      result = createElement(/* your seed elements */);
+
+      // NOTE FROM MICHAEL: I've copied this from above to re-use the seed element from above
+      aProps = { href: "https://codechrysalis.io" };
+      divElement = createVDOM(
+        "div",
+        {
+          id: "firstParagraph",
+          class: "container",
+        },
+        createVDOM("img"),
+        "text node"
+      );
+      spanElement = createVDOM("span");
+      textElement = "Click Me";
+      seedElements = createVDOM(
+        "a",
+        aProps,
+        divElement,
+        spanElement,
+        textElement
+      );
+
+      result = createElement(seedElements);
     });
 
     it("should have a function called createElement", () => {
@@ -65,6 +95,7 @@ describe("vDOM implementation", () => {
     });
 
     it("should return an HTML Element", () => {
+      console.log(seedElements.children[0]);
       expect(result.tagName).to.equal("A");
     });
 
@@ -84,7 +115,7 @@ describe("vDOM implementation", () => {
     it("should convert props to attributes", () => {});
   });
 
-  describe("updateElement function", () => {
+  xdescribe("updateElement function", () => {
     function resetParent() {
       target.innerHTML = "";
       const childA = document.createElement("a");

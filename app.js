@@ -1,6 +1,28 @@
-function createVDOM(type, props, ...children) {}
+function createVDOM(type, props, ...children) {
+  return {
+    type: type,
+    props: props,
+    children: children,
+  };
+}
 
-function createElement(node) {}
+function createElement(node) {
+  // Take properties object,
+  // loop through properties object
+  // check if "properties object".key is = result.key
+  // pass "properties object".key into result.key
+
+  const result = {
+    tagName: node.type,
+    class: "",
+    id: "",
+    href: "",
+    textNode: "",
+    childNodes: [],
+  };
+
+  return result;
+}
 
 function changed(node1, node2) {
   return (
