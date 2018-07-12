@@ -1,11 +1,6 @@
 require("jsdom-global")();
 const { expect } = require("chai");
-const {
-  createVDOM,
-  createElement,
-  changed,
-  updateElement,
-} = require("../solution");
+const { createVDOM, createElement, changed, updateElement } = require("../app");
 
 describe("vDOM implementation", () => {
   let aProps, divElement, spanElement, textElement, seedElements;
@@ -28,9 +23,19 @@ describe("vDOM implementation", () => {
   // we have some spec titles to help you get started
 
   describe("createVDOM function", () => {
-    it("should have a function called 'createVDOM'", () => {});
+    it("should have a function called 'createVDOM'", () => {
+      expect(createVDOM).to.be.a("function");
+    });
 
-    it("should return an object with type, props, and children properties", () => {});
+    it("should return an object with type, props, and children properties", () => {
+      const objectStructure = ["type", "props", "children"];
+      let returnedObjectStructure = [];
+      let returnedObject = createVDOM();
+      for (let key in returnedObject) {
+        returnedObjectStructure.push(key);
+      }
+      expect(returnedObjectStructure).to.eql(objectStructure);
+    });
 
     it("should return a string for type", () => {});
 
