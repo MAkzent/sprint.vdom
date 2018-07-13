@@ -96,6 +96,7 @@ describe("vDOM implementation", () => {
 
     it("should return an HTML Element", () => {
       expect(result.tagName).to.equal("A");
+      expect(result).to.be.a("HTMLAnchorElement");
     });
 
     it("should convert childNodes to HTML", () => {
@@ -105,17 +106,18 @@ describe("vDOM implementation", () => {
       |* This may be important for testing...
       |* ...ok, it obviously is, so take this clue into account.
       */
-      console.log(result.innerHTML);
-      expect(result).to.eql(
-        '<div id="firstParagraph" class="container"></div>'
-      );
+      expect(result.children[0]).to.be.a("HTMLDivElement");
+      expect(result.children[1]).to.be.a("HTMLSpanElement");
     });
 
     it("should convert grand childNodes to HTML", () => {
-      // see the clue above for this
+      expect(result.children[0].children[0]).to.be.a("HTMLImageElement");
     });
 
-    it("should convert props to attributes", () => {});
+    it("should convert props to attributes", () => {
+      expect(result.hasAttribute("href")).to.be.true;
+      expect(result.getAttribute("href")).to.eql("https://codechrysalis.io");
+    });
   });
 
   xdescribe("updateElement function", () => {

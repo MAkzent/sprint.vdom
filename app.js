@@ -14,21 +14,19 @@ function createElement(node) {
     }
   }
 
-  // write if statement for textNode
   if (typeof node === "string") {
-    return document.createTextNode(node);
+    element = document.createTextNode(node);
+    return element;
   } else {
-    // write function to create HTMLelement
     element = document.createElement(node.type);
-    // add attributes to new element
     setAttributes(element, node.props);
   }
 
-  // write recursive function to recurse through childnodes
   for (let i = 0; i < node.children.length; i++) {
     let child = createElement(node.children[i]);
     element.appendChild(child);
   }
+
   return element;
 }
 
