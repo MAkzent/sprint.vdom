@@ -120,7 +120,7 @@ describe("vDOM implementation", () => {
     });
   });
 
-  xdescribe("updateElement function", () => {
+  describe("updateElement function", () => {
     function resetParent() {
       target.innerHTML = "";
       const childA = document.createElement("a");
@@ -134,10 +134,18 @@ describe("vDOM implementation", () => {
       resetParent();
     });
 
+    let newChild = document.createElement("div");
+    newChild.setAttribute("id", "tes-div");
+    newChild.setAttribute("style", "display: none;");
+    document.body.appendChild(newChild);
+
     let target = document.getElementById("tes-div");
     let oldNode = createVDOM(
       "div",
-      { id: "tes-div", style: "display: none;" },
+      {
+        id: "tes-div",
+        style: "display: none;",
+      },
       createVDOM("a"),
       createVDOM("p", null, createVDOM("font"))
     );
@@ -146,7 +154,7 @@ describe("vDOM implementation", () => {
       expect(updateElement).to.be.a("function");
     });
 
-    it("should update target element with new nodes", () => {
+    it("should update target element with new nodes: add to end", () => {
       let newNodeAddToEnd = createVDOM(
         "div",
         {
@@ -166,7 +174,7 @@ describe("vDOM implementation", () => {
       expect(target.childNodes[2].nodeName).to.equal("SPAN");
     });
 
-    it("should update target element with new nodes", () => {
+    it("should update target element with new nodes: add to beginning", () => {
       let newNodeAddToBeginning = createVDOM(
         "div",
         {
