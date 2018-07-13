@@ -39,17 +39,6 @@ function changed(node1, node2) {
 }
 
 function updateElement(target, newNode, oldNode) {
-  function arrayDiff(a, b) {
-    return a.filter(function(i) {
-      if (b.indexOf(i) < 0) {
-        diffIndexes.push(a.indexOf(i));
-        return true;
-      } else {
-        return false;
-      }
-    });
-  }
-
   let output = target;
   // there should be an array where we push the end output
   // target: Source HTML Element to update
@@ -58,9 +47,42 @@ function updateElement(target, newNode, oldNode) {
   // output: HTML Element updated
   // create a document: html
   // let nodeSize = Math.max(newNode.children.length, oldNode.children.length)
-  var diffIndexes = [];
-  let diff = arrayDiff(newNode.children, oldNode.children);
-  console.log(diffIndexes);
+
+  let storage = {};
+
+  for (let i = 0; i < newNode.children.length; i++) {
+    for (let u = 0; u < oldNode.children.length; u++) {
+      if (!changed(oldNode.children[i], newNode.children[u])) {
+        console.log("--- IT'S A MATCH ---");
+        console.log("OLDNODE");
+        console.log(oldNode.children[u]);
+        console.log("NEWNODE");
+        console.log(newNode.children[i]);
+        // if exists?
+        // if same order?
+        storage[i] = oldNode.children[i];
+      }
+    }
+  }
+  // oldV newV
+  // 1a    1a
+  // 2b    2b
+  // 3c    3c
+  //       4d
+
+  // 1a   1d
+  // 2b   2a
+  // 3c   3b
+  //      4c
+
+  // if same order, same value do nothing
+  // if never seen before
+  //    if there is bottom of order
+  //      appendChild(test1)
+  //    if there is top of order
+  //      preppendchild(test2)
+
+  console.log(storage);
 
   // how we compare each node
   //   for (let i = 0; i < nodeSize; i++) {
