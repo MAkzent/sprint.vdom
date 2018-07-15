@@ -7,24 +7,22 @@ function createVDOM(type, props, ...children) {
 }
 
 function createElement(node) {
-  let element;
   function setAttributes(el, attrs) {
-    for (var key in attrs) {
+    for (const key in attrs) {
       el.setAttribute(key, attrs[key]);
     }
   }
 
   if (typeof node === "string") {
-    element = document.createTextNode(node);
-    return element;
-  } else {
-    element = document.createElement(node.type);
-    setAttributes(element, node.props);
+    return document.createTextNode(node);
   }
 
-  for (let i = 0; i < node.children.length; i++) {
-    let child = createElement(node.children[i]);
-    element.appendChild(child);
+  const element = document.createElement(node.type);
+  setAttributes(element, node.props);
+
+  for (let child of node.children) {
+    const newChild = createElement(child);
+    element.appendChild(newChild);
   }
 
   return element;
