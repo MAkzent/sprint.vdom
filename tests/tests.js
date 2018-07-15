@@ -65,8 +65,6 @@ describe("vDOM implementation", () => {
 
     beforeEach(() => {
       // create your own seed elements or use the ones created above!
-
-      // NOTE FROM MICHAEL: I've copied this from above to re-use the seed element from above
       aProps = { href: "https://codechrysalis.io" };
       divElement = createVDOM(
         "div",
@@ -182,16 +180,18 @@ describe("vDOM implementation", () => {
           style: "display: none;",
         },
         createVDOM("span"),
+        createVDOM("div"),
         createVDOM("a"),
         createVDOM("p", null, createVDOM("font"))
       );
       updateElement(target, newNodeAddToBeginning, oldNode);
 
-      expect(target.childNodes.length).to.equal(3);
+      expect(target.childNodes.length).to.equal(4);
 
       expect(target.childNodes[0].nodeName).to.equal("SPAN");
-      expect(target.childNodes[1].nodeName).to.equal("A");
-      expect(target.childNodes[2].nodeName).to.equal("P");
+      expect(target.childNodes[1].nodeName).to.equal("DIV");
+      expect(target.childNodes[2].nodeName).to.equal("A");
+      expect(target.childNodes[3].nodeName).to.equal("P");
     });
 
     it("should delete old nodes", () => {

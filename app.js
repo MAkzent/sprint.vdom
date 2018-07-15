@@ -39,78 +39,72 @@ function changed(node1, node2) {
 }
 
 function updateElement(target, newNode, oldNode) {
-  let output = target;
-  // there should be an array where we push the end output
-  // target: Source HTML Element to update
-  // newNode: new VDOM
-  // oldNode: old VDOM
-  // output: HTML Element updated
-  // create a document: html
-  // let nodeSize = Math.max(newNode.children.length, oldNode.children.length)
-
-  let storage = {};
-
-  for (let i = 0; i < newNode.children.length; i++) {
-    for (let u = 0; u < oldNode.children.length; u++) {
-      if (!changed(oldNode.children[i], newNode.children[u])) {
-        console.log("--- IT'S A MATCH ---");
-        console.log("OLDNODE");
-        console.log(oldNode.children[u]);
-        console.log("NEWNODE");
-        console.log(newNode.children[i]);
-        // if exists?
-        // if same order?
-        storage[i] = oldNode.children[i];
-      }
+  // SETUP
+  let parentNode = target;
+  // function to set oldAttributes to newAttributes
+  function setAttributes(el, attrs) {
+    for (var key in attrs) {
+      el.setAttribute(key, attrs[key]);
     }
   }
-  // oldV newV
-  // 1a    1a
-  // 2b    2b
-  // 3c    3c
-  //       4d
+  // find which Node has more children -> number becomes important in the for loop below
+  let maxChildren = Math.max(newNode.children.length, oldNode.children.length);
 
-  // 1a   1d
-  // 2b   2a
-  // 3c   3b
-  //      4c
+  // run the setAttributes function on the current node to change attributes
+  setAttributes(parentNode, newNode.props);
 
-  // if same order, same value do nothing
-  // if never seen before
-  //    if there is bottom of order
-  //      appendChild(test1)
-  //    if there is top of order
-  //      preppendchild(test2)
+  // dive into node.children
+  for (let i = 0; i < maxChildren; i++) {
+    // Initiate variables for each loop
+    let currentNewNode = newNode.children[i];
+    let currentOldNode = oldNode.children[i];
+    let currentOldHTML = parentNode.childNodes[i];
+    let hasChanged = changed(currentNewNode, currentOldNode);
 
-  console.log(storage);
+    if (hasChanged && currentOldNode === undefined) {
+      // in case there are still children in the newNode but not in the oldNode:
+      // append all remaining children
+      for (let u = i; u < maxChildren; u++) {
+        let currentNewHTML = createElement(newNode.children[u]);
+        parentNode.appendChild(currentNewHTML);
+      }
+      // done with this level, get out of it
+      return;
+    }
 
-  // how we compare each node
-  //   for (let i = 0; i < nodeSize; i++) {
-  //   if (changed(newNode.children[i], oldNode.children[i])) {
-  //     output.appendChild(createElement(newNode.children[i]))
-  //   }
-  // }
-  return output;
+    if (
+      hasChanged &&
+      currentOldHTML !== undefined &&
+      currentNewNode === undefined
+    ) {
+      // in case this node exists in the OldHTML but not in the newNode:
+      // remove old child
+      parentNode.removeChild(currentOldHTML);
+      // done with this level, get out of it
+      return;
+    }
+
+    if (hasChanged && currentNewNode !== undefined) {
+      // Switch oldHTML with newHTML
+      let currentNewHTML = createElement(currentNewNode);
+      parentNode.replaceChild(currentNewHTML, currentOldHTML);
+    }
+
+    // don't go deeper if currentNewNode is a string (it has no children)
+    if (typeof currentNewNode === "string") {
+      continue;
+    }
+
+    // don't go deeper if there are no children on either side
+    if (newNode.children.length === 0 || oldNode.children.length === 0) {
+      return;
+    }
+
+    // go one level deeper if it has childNodes
+    updateElement(parentNode.childNodes[i], currentNewNode, currentOldNode);
+  }
+
+  return parentNode;
 }
 
 module.exports = { createVDOM, createElement, changed, updateElement };
-
-// // oldNode
-// <body>
-//   <div id="tes-div" style="display: none;">
-//     <a></a>
-//     <p>
-//       <font></font>
-//     </p>
-//   </div>
-// </body>
-
-// // parent
-// <body>
-//   <div id="tes-div">
-//     <a></a>
-//     <p>
-//       <font></font>
-//     </p>
-//   </div>
-// </body>
